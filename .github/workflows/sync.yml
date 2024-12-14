@@ -5,8 +5,8 @@ permissions:
 
 on:
   schedule:
-    - cron: "0 0 * * *" # 每天一次同步
-  workflow_dispatch:
+    - cron: "0 0 * * *" # every day at midnight
+  workflow_dispatch:  # Manually triggered workflow for immediate sync
 
 jobs:
   sync_latest_from_upstream:
@@ -15,11 +15,9 @@ jobs:
     if: ${{ github.event.repository.fork }}
 
     steps:
-      # Step 1: Checkout the target repo
       - name: Checkout target repo
         uses: actions/checkout@v3
 
-      # Step 2: Sync upstream changes
       - name: Sync upstream changes
         id: sync
         uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
@@ -27,10 +25,11 @@ jobs:
           upstream_sync_repo: geekjays/edgetunnel
           upstream_sync_branch: main
           target_sync_branch: main
-          target_repo_token: ${{ secrets.GITHUB_TOKEN }} # 自动生成，无需手动设置
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Sync check
         if: failure()
         run: |
-          echo "[Error] 由于上游仓库的 workflow 文件变更，GitHub 自动暂停了本次自动更新。你需要手动同步你的 Fork。详细教程请查看项目 README.md"
+          echo "[Error] 由于上游仓库的 workflow 文件变更，导致 GitHub 自动暂停了本次自动更新，你需要手动 Sync Fork 一次，详细教程请查看项目README.md "
+          echo "[Error] Due to a change in the workflow file of the upstream repository, GitHub has automatically suspended the scheduled automatic update. You need to manually sync your fork. Please refer to the project README.md for instructions. "
           exit 1

@@ -1,7 +1,7 @@
 name: Obfuscate and Commit
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Manually triggered workflow
 
 jobs:
   obfuscate:
@@ -10,8 +10,7 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -23,32 +22,23 @@ jobs:
       - name: Install dependencies
         run: npm install -g javascript-obfuscator
 
-      - name: Check if plain_text.js exists
-        run: |
-          echo "Checking for plain_text.js"
-          ls -la plain_text.js
-
-      - name: Echo Starting obfuscation
-        run: |
-          echo "Starting obfuscation..."
-
       - name: Obfuscate code
         run: |
           echo "Starting obfuscation..."
           javascript-obfuscator plain_text.js --output _worker.js \
-            --compact true \
-            --control-flow-flattening true \
-            --control-flow-flattening-threshold 1 \
-            --dead-code-injection true \
-            --dead-code-injection-threshold 1 \
-            --identifier-names-generator hexadecimal \
-            --rename-globals true \
-            --string-array true \
-            --string-array-encoding 'rc4' \
-            --string-array-threshold 1 \
-            --transform-object-keys true \
-            --unicode-escape-sequence true || echo "Obfuscation failed with error: $?"
-          echo "Obfuscation completed!"
+          --compact true \
+          --control-flow-flattening true \
+          --control-flow-flattening-threshold 1 \
+          --dead-code-injection true \
+          --dead-code-injection-threshold 1 \
+          --identifier-names-generator hexadecimal \
+          --rename-globals true \
+          --string-array true \
+          --string-array-encoding 'rc4' \
+          --string-array-threshold 1 \
+          --transform-object-keys true \
+          --unicode-escape-sequence true
+          echo "Obfuscation completed."
 
       - name: Commit changes
         run: |
