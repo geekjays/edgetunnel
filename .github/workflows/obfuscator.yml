@@ -28,6 +28,10 @@ jobs:
           echo "Checking for plain_text.js"
           ls -la plain_text.js
 
+      - name: Echo Starting obfuscation
+        run: |
+          echo "Starting obfuscation..."
+
       - name: Obfuscate code
         run: |
           echo "Starting obfuscation..."
