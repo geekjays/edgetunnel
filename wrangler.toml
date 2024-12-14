@@ -3,4 +3,4 @@ main = "_worker.js"
 compatibility_date = "2024-12-14"
 
 [vars]
-PASSWORD = "your_password_here"
+UUID = "2aaef5c4-8053-4e44-884a-3df9dbda7804"
