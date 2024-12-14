@@ -1,5 +1,5 @@
 name = "long-limit-db7d"
-main = "plain_text.js"
+main = "_worker.js"
 compatibility_date = "2024-12-13"
 
 [vars]
