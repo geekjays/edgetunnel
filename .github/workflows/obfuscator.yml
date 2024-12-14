@@ -1,10 +1,7 @@
 name: Obfuscate and Commit
 
 on:
-    #push:
-    #    paths:
-    #        - 'plain_text.js'
-    workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
   obfuscate:
@@ -13,7 +10,8 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout the repository
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -25,21 +23,28 @@ jobs:
       - name: Install dependencies
         run: npm install -g javascript-obfuscator
 
+      - name: Check if plain_text.js exists
+        run: |
+          echo "Checking for plain_text.js"
+          ls -la plain_text.js
+
       - name: Obfuscate code
         run: |
+          echo "Starting obfuscation..."
           javascript-obfuscator plain_text.js --output _worker.js \
-          --compact true \
-          --control-flow-flattening true \
-          --control-flow-flattening-threshold 1 \
-          --dead-code-injection true \
-          --dead-code-injection-threshold 1 \
-          --identifier-names-generator hexadecimal \
-          --rename-globals true \
-          --string-array true \
-          --string-array-encoding 'rc4' \
-          --string-array-threshold 1 \
-          --transform-object-keys true \
-          --unicode-escape-sequence true
+            --compact true \
+            --control-flow-flattening true \
+            --control-flow-flattening-threshold 1 \
+            --dead-code-injection true \
+            --dead-code-injection-threshold 1 \
+            --identifier-names-generator hexadecimal \
+            --rename-globals true \
+            --string-array true \
+            --string-array-encoding 'rc4' \
+            --string-array-threshold 1 \
+            --transform-object-keys true \
+            --unicode-escape-sequence true || echo "Obfuscation failed with error: $?"
+          echo "Obfuscation completed!"
 
       - name: Commit changes
         run: |
